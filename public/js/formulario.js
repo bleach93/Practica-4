@@ -1,6 +1,6 @@
 const API_URL = "http://201.140.116.237:3007/api";
 
-$("#form").on("submit", function (event) {
+$("#formulario").on("submit", function (event) {
     event.preventDefault();
     let data = $(this).serialize();
     $.ajax({
