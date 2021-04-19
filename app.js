@@ -9,13 +9,13 @@ class App {
         this.config();
         this.router.routes(this.app)
     }
-
+    
     config(){
         this.app.use(express.static("public")); //se agrega esta linea
         this.app.use(express.urlencoded({ extended: true}));
         this.app.use(express.json({ limit: '25mb'}));
         this.app.use(busboyBodyParser({}));
-        this.app.set("view engine", "ejs");
+        this.app.set("view engine", "ejs");//se agrega ejs 
         this.app.use((req, res, next)=>{
             res.header('Access-Control-Allow-Origin','*');
             res.header('Access-Control-Expose-Headers', 'x-total-count');

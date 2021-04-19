@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,61 +10,110 @@
 </head>
 <body>
     <div class="container fluid">
-        <form id="formulario">
-                    <fieldset>
-                        <br>
-                        <div class="mb-1">
-                            <label class="form-label">Nombre:</label>
-                            <input type="text" placeholder="Ingrese el nombre" name="nombre" class="form-control" required>
-                        </div>
-                        <div class="mb-1">
-                            <label class="form-label">Apellido Paterno:</label>
-                            <input type="text" placeholder="Ingrese el apellido paterno" name="apellidoPaterno" class="form-control" required>
-                        </div>
-                        <div class="mb-1">
-                            <label class="form-label">Apellido Materno:</label>
-                            <input type="text" placeholder="Ingrese el apellido materno" name="apellidoMaterno" class="form-control" required>
-                        </div>
-                        <div class="mb-1">
-                            <label class="form-label">Email:</label>
-                            <input type="email" placeholder="Ingrese la direccion de correo" name="correo" class="form-control" required>
-                        </div>
-                        <div class="mb-1">
-                            <label class="form-label">Celular:</label>
-                            <input type="text" placeholder="Ingrese su numero de celular" name="celular" class="form-control" required>
-                        </div>
-                        <div class="justify-content-left">
-                            <button type="submit" class="btn btn-primary mr-1">Enviar</button>
-                            <button type="reset" class="btn btn-primary mr-1">Limpiar</button>
-                        </div>
-                    </fieldset>
-                    <br>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Apellido Paterno</th>
-                            <th>Apellido Materno</th>
-                            <th>Email</th>
-                            <th>Celular</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% data.forEach( empleado=> { %>
-                            <tr>
-                                <td><%= empleado.nombre %></td>
-                                <td><%= empleado.apellidoPaterno %></td>
-                                <td><%= empleado.apellidoMaterno %></td>
-                                <td><%= empleado.correo %></td>
-                                <td><%= empleado.celular %></td>
-                            </tr>
-                            <% }) %>
-                    </tbody>
-                </table>
-        </form>
+        <form action="/api/empleados">
+                <br>
+                <div class="mb-1">
+                    <label class="form-label">Nombre:</label>
+                    <input type="text" placeholder="Ingrese el nombre" name="nombre" id="nombre" class="form-control" required>
+                </div>
+                <div class="mb-1">
+                    <label class="form-label">Apellido Paterno:</label>
+                    <input type="text" placeholder="Ingrese el apellido paterno" name="apellidoPaterno" id="apellidoPaterno" class="form-control" required>
+                </div>
+                <div class="mb-1">
+                    <label class="form-label">Apellido Materno:</label>
+                    <input type="text" placeholder="Ingrese el apellido materno" name="apellidoMaterno" id="apellidoMaterno" class="form-control" required>
+                </div>
+                <div class="mb-1">
+                    <label class="form-label">Email:</label>
+                    <input type="email" placeholder="Ingrese la direccion de correo" name="correo" id="correo" class="form-control" required>
+                </div>
+                <div class="mb-1">
+                    <label class="form-label">Celular:</label>
+                    <input type="text" placeholder="Ingrese su numero de celular" name="celular" id="celular" class="form-control" required>
+                </div>
+                <div class="justify-content-left" id="buttons">
+                    <button id="btn_actualizar" type="submit" class="btn btn-primary mr-1">Actualizar</button>
+                    <button id="btn_limpiar" type="reset" class="btn btn-primary mr-1">Limpiar</button>
+                </div>
+            <br>
+        </form>            
+        <table id="table" class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido Paterno</th>
+                    <th>Apellido Materno</th>
+                    <th>Email</th>
+                    <th>Celular</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
 </body>
-<script src="/js/libs/jquery-3.6.0.min.js"></script>
 
-<script src="/js/formulario.js"></script>
+<script>//inicia el script
+    function listaEmpleados(id=null) {
+      document.querySelector('form').setAttribute('action',`/api/empleados?empleadoId=${id}`);
+      fetch(document.querySelector('form').getAttribute('action'), {
+            method: 'GET'
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(!id){
+                  document.getElementById('btn_limpiar').click()
+                  const empleados = document.querySelector('#table tbody');//la constante empleados muestra los valores de la tabla.
+                  let datos = '';//se declara la variable datos.
+                  data.forEach(empleado => {//por cada empleado  va a mostrarlos y al seleccionarlos se mostraran en el formulario para editarse.
+                      datos += `<tr><td><button class="btn btn-light mr-1"  onclick="listaEmpleados(${empleado.id})">${empleado.nombre}</button></td>`
+                      datos += `<td><button class="btn btn-light mr-1"  onclick="listaEmpleados(${empleado.id})">${empleado.apellidoPaterno}</button></td>`
+                      datos += `<td><button class="btn btn-light mr-1"  onclick="listaEmpleados(${empleado.id})">${empleado.apellidoMaterno}</button></td>`
+                      datos += `<td><button class="btn btn-light mr-1"  onclick="listaEmpleados(${empleado.id})">${empleado.correo}</button></td>`
+                      datos += `<td><button class="btn btn-light mr-1"  onclick="listaEmpleados(${empleado.id})">${empleado.celular}</button></td></tr>`
+                  });
+                  empleados.innerHTML = datos
+                }else{
+                    document.getElementById('nombre').value = data[0].nombre
+                    document.getElementById('apellidoPaterno').value = data[0].apellidoPaterno
+                    document.getElementById('apellidoMaterno').value = data[0].apellidoMaterno
+                    document.getElementById('correo').value = data[0].correo
+                    document.getElementById('celular').value = data[0].celular
+                }
+            });
+    } 
+    listaEmpleados();
+    document.getElementById('btn_limpiar').onclick = ()=>{
+      document.querySelector('form').setAttribute('action',`/api/empleados`)
+    }
+    document.querySelector('form').onsubmit = (event)=>{
+      event.preventDefault()
+      alert("Se ha actualizado la informacion")//Alerta cuando se realizan cambios
+      var url = document.querySelector('form').getAttribute('action')
+      var method = 'POST'
+
+      if(url.search('empleadoId')>0){
+        method = 'PUT'
+      }
+      fetch(document.querySelector('form').getAttribute('action'), {
+        method: method,
+        url : document.querySelector('form').getAttribute('action'),
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          "nombre": document.getElementById('nombre').value,
+          "apellidoPaterno": document.getElementById('apellidoPaterno').value ,
+          "apellidoMaterno": document.getElementById('apellidoMaterno').value,
+          "correo": document.getElementById('correo').value,
+          "celular": document.getElementById('celular').value
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+          method = 'POST';
+          document.querySelector('form').setAttribute('action',`/api/empleados`)
+          listaEmpleados();
+      });
+    }
+  </script>
 </html>

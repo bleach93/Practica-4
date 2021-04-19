@@ -42,6 +42,60 @@ module.exports = class EmpleadosEmpleadoController {
             res.status(500).json({error: 'No se encontraron resultados'});
             return;
         }
-        return res.render('formulario', {data: data})
+        res.status(200).json(data);
+    }
+
+    //Generacion del metodo put
+    static async put(req,res){
+        const interfazEmpleado = {
+            nombre : '',
+            correo : '',
+            celular : '',
+            apellidoMaterno : '',
+            apellidoPaterno: '',
+            fechaRegistro : new Date(),
+            estatus : true
+        }
+        const data = Object.assign(interfazEmpleado,req.body);
+        const empleadoId = req.query.empleadoId ? +req.query.empleadoId : 0;
+        if(!empleadoId){
+            res.status(500).json({error:'Favor de ingresar la informacion correcta!'});
+            return;
+        }
+        //validacion de datos correctos
+        if(!data.nombre || !data.correo || !data.celular || !data.apellidoMaterno || !data.apellidoPaterno){
+            res.status(500).json({error:'Favor de ingresar toda la informacion!'});
+            return;
+        }
+        const empleadoFind = await MEmpleado.findOne({
+            where: {
+                id:empleadoId
+            }
+        })
+        if(!empleadoFind){
+            res.status(500).json({error:'El usuario que desea actualizar no existe!'});
+            return;
+        }
+
+        //Gerenacion de consulta de actualizacion
+        const empleado = await MEmpleado.update({
+            nombre : data.nombre,
+            correo : data.correo,
+            celular : data.celular,
+            apellidoMaterno :data.apellidoMaterno,
+            apellidoPaterno : data.apellidoPaterno,
+            estatus :data.estatus    
+        },{
+            where: {
+                id : empleadoFind.id
+            }
+        })
+        if(empleado){
+            res.status(200).json({
+                estatus:true,
+            });
+        }else{
+            res.status(500).json({error: 'No se pudo actualizar el usuario en la base de datos!' })
+        }
     }
 }

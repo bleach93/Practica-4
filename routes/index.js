@@ -1,7 +1,7 @@
-const empleadosRouter = require('./empleados');
+const empleados = require('./empleados');
 
 module.exports = class Routes {
     routes(app){
-        app.use(empleadosRouter);
+        app.use('/api',empleados);
     }
 }

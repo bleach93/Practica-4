@@ -5,7 +5,9 @@ const EmpleadosEmpleadoController = require('../controllers/empleados/empleado')
 
 router.get('/empleados', EmpleadosEmpleadoController.get);
 
-router.post('/api/empleados', EmpleadosEmpleadoController.post);
+router.post('/empleados', EmpleadosEmpleadoController.post);
+
+router.put('/empleados', EmpleadosEmpleadoController.put);
 
 
 module.exports = router;

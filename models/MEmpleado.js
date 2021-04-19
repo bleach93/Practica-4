@@ -1,7 +1,6 @@
 const Sequelize = require('sequelize');
 const db = require ('../db');
 const MEmpleado = db.define('empleado',{
-
     nombre: {
         type: Sequelize.STRING(25)
     },
